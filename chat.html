@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUME — Chat</title>
+<link rel="icon" href="images/lume-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/app.js"></script>
+</head>
+<body>
+<header>
+  <div class="head">
+    <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
+    <a class="brand" href="index.html"><img class="logo site-logo" src="images/lume-logo.png" alt="Logótipo LUME"><span class="wordmark">LUME</span></a>
+    <a class="cta" href="colecao.html">Ver coleção</a>
+  </div>
+</header>
+<main>
+  <div class="chatpage">
+    <div class="chathead">
+      <img class="site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+      <div><h1>LUME</h1><p>Chat da loja</p></div>
+    </div>
+    <div class="group-banner" id="group-banner" style="max-width:100%">
+      <p>Entre no grupo para receber as novidades em primeira mão e cupons de desconto.</p>
+      <p><a class="btn" data-group-link href="https://chat.whatsapp.com/LUMEGrupo">Entrar no grupo</a> <a class="btn-outline" data-whatsapp-link href="https://wa.me/258840000000">WhatsApp</a></p>
+    </div>
+    <div class="chatlog" id="chatlog"><p style="color:#777">A carregar a conversa…</p></div>
+    <form class="chatbox" id="chatform">
+      <input type="text" id="chat-text" placeholder="Escreva a sua mensagem…" autocomplete="off">
+      <input type="file" id="chat-file" accept="image/*,video/*,audio/*,application/pdf" style="max-width:220px">
+      <button class="btn" type="submit">Enviar</button>
+      <button class="btn-outline" id="audio-btn" type="button">Gravar áudio</button>
+    </form>
+    <p style="color:#777;line-height:1.6">Anexos até 5 MB. O chat só abre depois da conta, para a conversa ficar guardada na sua conta.</p>
+    <div class="msg" id="chat-msg" style="display:none"></div>
+  </div>
+</main>
+<footer>
+  <img class="footlogo site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+  <div class="wm">LUME</div>
+  <p>Eletrodomésticos · Maputo</p>
+  <p>© 2026 LUME</p>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", async function(){
+  var log = document.getElementById("chatlog"), msg = document.getElementById("chat-msg");
+  // Chat only after account: intent → account → chat, no step is lost.
+  if (!window.lume.configured) { log.innerHTML = "<p>O chat ainda está a ser ligado pela loja.</p>"; return; }
+  var session = await window.lume.getSession();
+  if (!session) {
+    window.lume.savePending("chat", "chat.html");
+    location.href = "conta.html";
+    return;
+  }
+  document.getElementById("group-banner").style.display = "block";
+  var convId = null;
+  async function ensureConversation(){
+    var r = await window.lume.supabase.from("conversations").select("id").eq("user_id", session.user.id).order("created_at", {ascending: false}).limit(1).maybeSingle();
+    if (r.data) return r.data.id;
+    var c = await window.lume.supabase.from("conversations").insert({user_id: session.user.id}).select().single();
+    return c.data ? c.data.id : null;
+  }
+  function timeOf(ts){
+    var d = new Date(ts);
+    return d.toLocaleTimeString("pt-PT", {hour: "2-digit", minute: "2-digit"});
+  }
+  function renderFile(url, body){
+    var clean = url.split("?")[0];
+    if (/-audio\./i.test(clean)) return '<audio controls src="' + url + '" style="width:280px"></audio>' + (body ? "<div>" + body.replace(/</g, "&lt;") + "</div>" : "");
+    if (/\.(jpg|jpeg|png|webp|gif)$/i.test(clean)) return '<img src="' + url + '" alt="Anexo" style="max-width:280px;height:auto">';
+    if (/\.(mp4|mov|webm)$/i.test(clean)) return '<video controls src="' + url + '" style="width:280px;max-height:320px"></video>';
+    if (/\.(mp3|wav|ogg|m4a)$/i.test(clean)) return '<audio controls src="' + url + '" style="width:280px"></audio>';
+    return '<a href="' + url + '" target="_blank" rel="noopener">Abrir anexo</a>';
+  }
+  async function loadMessages(){
+    if (!convId) return;
+    var r = await window.lume.supabase.from("messages").select("*").eq("conversation_id", convId).order("created_at", {ascending: true});
+    if (r.error) { log.innerHTML = "<p>Não foi possível carregar a conversa.</p>"; return; }
+    if (!r.data.length) { log.innerHTML = "<p style='color:#777'>Olá! Escreva a sua mensagem — a LUME responde aqui.</p>"; return; }
+    log.innerHTML = r.data.map(function(m){
+      var mine = m.sender === "customer";
+      var body = "";
+      if (m.file_url) body = renderFile(m.file_url, m.body);
+      else body = m.body ? m.body.replace(/</g, "&lt;") : "";
+      // Seen ticks, WhatsApp style: ✓ sent, ✓✓ seen by the other side.
+      var seen = mine ? (m.read_at ? " ✓✓" : " ✓") : "";
+      return '<div class="bubble ' + (mine ? "mine" : "theirs") + '">' + body + "<small>" + timeOf(m.created_at) + seen + "</small></div>";
+    }).join("");
+    log.scrollTop = log.scrollHeight;
+    // Mark the shop's messages as seen now that the customer opened the chat.
+    await window.lume.supabase.from("messages").update({read_at: new Date().toISOString()}).eq("conversation_id", convId).eq("sender", "shop").is("read_at", null);
+  }
+  convId = await ensureConversation();
+  await loadMessages();
+  setInterval(loadMessages, 5000);
+  document.getElementById("chatform").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var text = document.getElementById("chat-text").value.trim();
+    var file = document.getElementById("chat-file").files[0];
+    if (!text && !file) return;
+    var fileUrl = null;
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { msg.style.display = "block"; msg.className = "msg err"; msg.textContent = "O anexo não pode passar de 5 MB."; return; }
+      var path = session.user.id + "/" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      var up = await window.lume.supabase.storage.from("chat-attachments").upload(path, file);
+      if (up.error) { msg.style.display = "block"; msg.className = "msg err"; msg.textContent = "Não foi possível enviar o anexo: " + up.error.message; return; }
+      var pub = window.lume.supabase.storage.from("chat-attachments").getPublicUrl(path);
+      fileUrl = pub.data.publicUrl;
+    }
+    var ins = await window.lume.supabase.from("messages").insert({conversation_id: convId, sender: "customer", body: text || null, file_url: fileUrl});
+    if (ins.error) { msg.style.display = "block"; msg.className = "msg err"; msg.textContent = ins.error.message; return; }
+    document.getElementById("chat-text").value = "";
+    document.getElementById("chat-file").value = "";
+    await loadMessages();
+  });
+  // Audio: MediaRecorder, fixed-width player in the bubble (see CSS).
+  var recorder = null, chunks = [], recordStartedAt = 0;
+  var audioBtn = document.getElementById("audio-btn");
+  audioBtn.onclick = async function(){
+    if (recorder) {
+      recorder.stop();
+      audioBtn.textContent = "Gravar áudio";
+      recorder = null;
+      return;
+    }
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({audio: true});
+      recorder = new MediaRecorder(stream); chunks = [];
+      recorder.ondataavailable = function(e){ if (e.data.size) chunks.push(e.data); };
+      recorder.onstop = async function(){
+        // Correct timing: measured from the real recording, not from the
+        // audio file header (which often shows no time at all).
+        var secs = Math.max(1, Math.round((Date.now() - recordStartedAt) / 1000));
+        var mm = Math.floor(secs / 60), ss = secs % 60;
+        var durationText = "Áudio · " + mm + ":" + (ss < 10 ? "0" : "") + ss;
+        var blob = new Blob(chunks, {type: "audio/webm"});
+        if (blob.size > 5 * 1024 * 1024) { msg.style.display = "block"; msg.className = "msg err"; msg.textContent = "O áudio não pode passar de 5 MB."; return; }
+        var path = session.user.id + "/" + Date.now() + "-audio.webm";
+        var up = await window.lume.supabase.storage.from("chat-attachments").upload(path, blob);
+        if (up.error) { msg.style.display = "block"; msg.className = "msg err"; msg.textContent = up.error.message; return; }
+        var pub = window.lume.supabase.storage.from("chat-attachments").getPublicUrl(path);
+        await window.lume.supabase.from("messages").insert({conversation_id: convId, sender: "customer", body: durationText, file_url: pub.data.publicUrl});
+        await loadMessages();
+      };
+      recordStartedAt = Date.now();
+      recorder.start();
+      audioBtn.textContent = "Parar gravação";
+    } catch (e) {
+      msg.style.display = "block"; msg.className = "msg err"; msg.textContent = "Não foi possível aceder ao microfone.";
+    }
+  };
+});
+</script>
+<a class="chat-fab" href="chat.html" data-chat-fab style="display:none" aria-label="Abrir chat">💬</a>
+</body>
+</html>

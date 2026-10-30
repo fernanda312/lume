@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUME — Detalhes do produto</title>
+<link rel="icon" href="images/lume-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/app.js"></script>
+</head>
+<body>
+<header>
+  <div class="head">
+    <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
+    <a class="brand" href="index.html"><img class="logo site-logo" src="images/lume-logo.png" alt="Logótipo LUME"><span class="wordmark">LUME</span></a>
+    <a class="cta" href="colecao.html">Ver coleção</a>
+  </div>
+</header>
+<main><div class="detail" id="detail"><p>A carregar o produto…</p></div></main>
+<footer>
+  <img class="footlogo site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+  <div class="wm">LUME</div>
+  <p>Eletrodomésticos · Maputo</p>
+  <p>© 2026 LUME</p>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", async function(){
+  var id = new URLSearchParams(location.search).get("id");
+  var p = productById(id);
+  // Stock from the database (admin > Produtos). Null = no stock control.
+  var stock = null;
+  if (window.lume.configured) {
+    var r = await window.lume.supabase.from("products").select("stock_qty").eq("slug", id).maybeSingle();
+    if (r.data) stock = r.data.stock_qty;
+  }
+  var el = document.getElementById("detail");
+  if (!p) { el.innerHTML = '<div><h1>Produto não encontrado</h1><p>Volte à coleção e escolha outro produto.</p><a class="btn" href="colecao.html">Ver a coleção</a></div>'; return; }
+  document.title = "LUME — " + p.name;
+  var priceHtml = p.price ? '<p class="price">' + fmtMT(p.price) + '</p>' : '<p class="price">Preço a confirmar</p>';
+  var unpricedNote = p.price ? "" : '<p>Este produto ainda não tem preço na loja. Adicione ao carrinho e fale connosco no chat para confirmar o preço antes de pagar — produtos sem preço não podem ser pagos online.</p>';
+  var stockNote = (stock === null) ? "" : (stock === 0 ? '<p><strong>Esgotado.</strong> Fale connosco no chat para saber quando volta.</p>' : '<p>Em stock: ' + stock + ' unidade(s).</p>');
+  var outOfStock = stock === 0;
+  el.innerHTML =
+    '<figure style="margin:0"><img src="' + p.img + '" alt="' + p.name + '"></figure>' +
+    '<div><h1>' + p.name + '</h1><p class="cat">' + p.cat + '</p>' + priceHtml +
+    '<p>' + p.desc + '</p>' + unpricedNote + stockNote +
+    '<div class="qty"><button id="minus" type="button">−</button><span id="qty">1</span><button id="plus" type="button">+</button></div>' +
+    '<div class="actions"><button class="btn-outline" id="add" type="button">Adicionar ao carrinho</button>' +
+    '<button class="btn" id="buy" type="button">Comprar</button>' +
+    '<a href="colecao.html">Voltar à coleção</a></div>' +
+    '<div style="margin-top:20px"><button class="btn-outline" id="how-receive" type="button">Como recebes o produto</button></div>' +
+    '<div class="overlay" id="receive-box"><div class="overlay-panel"><button class="overlay-close" id="receive-close" type="button" aria-label="Fechar">×</button>' +
+    '<h3 style="font-weight:400;margin-top:0">Como recebes o produto</h3>' +
+    '<table class="mini-table">' +
+    '<tr><td>O que recebes</td><td>' + p.name + ', exatamente como está na foto.</td></tr>' +
+    '<tr><td>Como recebes</td><td>Entrega em Maputo ou levantamento na loja em Maputo.</td></tr>' +
+    '<tr><td>Quando recebes</td><td>Em 1 a 3 dias úteis, depois do pagamento confirmado.</td></tr>' +
+    '<tr><td>Fora de Maputo</td><td>Fala connosco no chat antes de pagar, para confirmar o prazo.</td></tr></table>' +
+    '<a class="btn" href="chat.html">Falar no chat</a></div></div></div>';
+  var qty = 1, qEl = document.getElementById("qty");
+  document.getElementById("minus").onclick = function(){ if (qty > 1) { qty--; qEl.textContent = qty; } };
+  document.getElementById("plus").onclick = function(){ qty++; qEl.textContent = qty; };
+  document.getElementById("how-receive").onclick = function(){ document.getElementById("receive-box").classList.add("open"); };
+  document.getElementById("receive-close").onclick = function(){ document.getElementById("receive-box").classList.remove("open"); };
+  document.getElementById("receive-box").addEventListener("click", function(e){ if (e.target === this) this.classList.remove("open"); });
+  if (outOfStock) {
+    document.getElementById("add").disabled = true; document.getElementById("add").textContent = "Esgotado";
+    document.getElementById("buy").disabled = true; document.getElementById("buy").textContent = "Esgotado";
+  }
+  document.getElementById("add").onclick = async function(e){ if (outOfStock) return; var ok = await window.lume.requireAccountForCart(p.id, qty); if (ok) e.target.textContent = "Adicionado ao carrinho ✓"; };
+  document.getElementById("buy").onclick = async function(){ if (outOfStock) return; var ok = await window.lume.requireAccountForCart(p.id, qty); if (ok) location.href = "carrinho.html"; };
+});
+</script>
+<a class="chat-fab" href="chat.html" data-chat-fab style="display:none" aria-label="Abrir chat">💬</a>
+</body>
+</html>

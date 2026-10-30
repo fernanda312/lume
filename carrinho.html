@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUME — Carrinho</title>
+<link rel="icon" href="images/lume-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/app.js"></script>
+</head>
+<body>
+<header>
+  <div class="head">
+    <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
+    <a class="brand" href="index.html"><img class="logo site-logo" src="images/lume-logo.png" alt="Logótipo LUME"><span class="wordmark">LUME</span></a>
+    <a class="cta" href="colecao.html">Ver coleção</a>
+  </div>
+</header>
+<main>
+  <div class="cart">
+    <h2 style="font-weight:400;font-size:32px">O seu carrinho</h2>
+    <div id="items"></div>
+    <div class="cart-total" id="total"></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a class="btn-outline" href="colecao.html">Continuar a comprar</a>
+      <button class="btn" id="checkout" type="button">Finalizar compra</button>
+    </div>
+    <!-- Checkout gate: nobody concludes a purchase without an account.
+         If not logged in, the cart is saved as a pending intent and the
+         visitor is sent to create an account, then returned here. -->
+    <div class="overlay" id="checkout-box">
+      <div class="overlay-panel">
+        <button class="overlay-close" id="checkout-close" type="button" aria-label="Fechar">×</button>
+        <h3 style="font-weight:400;margin-top:0">Para concluir a compra</h3>
+        <p id="checkout-status">Para pagar, é preciso ter conta. A conta cria-se com email e senha, sem verificação por email.</p>
+        <div id="checkout-table"></div>
+        <table class="mini-table">
+          <tr><td>O que recebes</td><td>Os produtos da tabela, exatamente como estão na foto.</td></tr>
+          <tr><td>Como recebes</td><td>Entrega em Maputo ou levantamento na loja em Maputo.</td></tr>
+          <tr><td>Quando recebes</td><td>Em 1 a 3 dias úteis, depois do pagamento confirmado.</td></tr>
+        </table>
+        <p data-delivery-text style="display:none">Entrega em Maputo em 1 a 3 dias úteis, sem custo de entrega. Levantamento na loja em Maputo.</p>
+        <div id="pay-form" style="display:none">
+          <label for="mpesa-phone">Número M-Pesa</label>
+          <input id="mpesa-phone" type="tel" placeholder="84xxxxxxx ou 85xxxxxxx" inputmode="tel">
+          <p style="color:#666;line-height:1.7">Só M-Pesa. Confirma o PIN no teu telemóvel.</p>
+          <button class="btn" id="pay" type="button">Pagar com M-Pesa</button>
+        </div>
+        <div id="pay-error" class="msg err" style="display:none"></div>
+        <p id="pay-done" style="display:none;color:#666;line-height:1.7"></p>
+        <div id="pay-chat-link" style="display:none;margin-top:16px"><a class="btn" href="chat.html">Ir para o chat</a></div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <img class="footlogo site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+  <div class="wm">LUME</div>
+  <p>Eletrodomésticos · Maputo</p>
+  <p>© 2026 LUME</p>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", async function(){
+  // The cart belongs to an account. Without an account, there is no
+  // "empty cart" to show — the visitor goes to create an account first
+  // and comes back here after, with the cart remembered.
+  if (window.lume.configured) {
+    var session = await window.lume.getSession();
+    if (!session) {
+      window.lume.savePending("cart", "carrinho.html");
+      location.href = "conta.html";
+      return;
+    }
+  }
+  var box = document.getElementById("items"), totalEl = document.getElementById("total");
+  function render(){
+    var cart = window.lume.getCart();
+    if (!cart.length) { box.innerHTML = "<p>O seu carrinho está vazio.</p>"; totalEl.textContent = ""; return; }
+    var total = 0, hasUnpriced = false;
+    box.innerHTML = cart.map(function(item){
+      var p = productById(item.id); if (!p) return "";
+      var line = p.price ? p.price * item.qty : 0; total += line;
+      if (!p.price) hasUnpriced = true;
+      return '<div class="cart-row"><img src="' + p.img + '" alt="' + p.name + '"><div><h3>' + p.name + '</h3><p>' + p.cat + '</p><p>Quantidade: ' + item.qty + '</p></div><div style="text-align:right"><p>' + (p.price ? fmtMT(line) : "Preço a confirmar") + '</p><button class="btn-outline" data-remove="' + p.id + '" type="button">Tirar</button></div></div>';
+    }).join("");
+    totalEl.textContent = "Total dos produtos com preço: " + fmtMT(total);
+    if (hasUnpriced) totalEl.textContent += " — produtos sem preço não entram no pagamento online.";
+    document.querySelectorAll("[data-remove]").forEach(function(b){
+      b.onclick = function(){ window.lume.saveCart(window.lume.getCart().filter(function(i){ return i.id !== b.getAttribute("data-remove"); })); render(); };
+    });
+  }
+  render();
+  document.getElementById("checkout-close").onclick = function(){
+    document.getElementById("checkout-box").classList.remove("open");
+    document.getElementById("checkout").style.display = "";
+  };
+  document.getElementById("checkout-box").addEventListener("click", function(e){
+    if (e.target === this) {
+      this.classList.remove("open");
+      document.getElementById("checkout").style.display = "";
+    }
+  });
+  document.getElementById("checkout").onclick = async function(){
+    var cart = window.lume.getCart();
+    if (!cart.length) { alert("O seu carrinho está vazio."); return; }
+    document.getElementById("checkout-box").classList.add("open");
+    document.getElementById("checkout").style.display = "none";
+    // Visible table: what you receive, quantity, price, total.
+    var pricedTotal = 0;
+    document.getElementById("checkout-table").innerHTML = "<table class='mini-table'>" + cart.map(function(item){
+      var p = productById(item.id); if (!p) return "";
+      if (p.price) pricedTotal += p.price * item.qty;
+      return "<tr><td>" + p.name + " × " + item.qty + "</td><td style='text-align:right'>" + (p.price ? fmtMT(p.price * item.qty) : "Preço a confirmar") + "</td></tr>";
+    }).join("") + "<tr><td><strong>Total a pagar</strong></td><td style='text-align:right'><strong>" + fmtMT(pricedTotal) + "</strong></td></tr></table>";
+    if (!window.lume.configured) {
+      document.getElementById("checkout-status").textContent = "A loja ainda está a ser ligada.";
+      return;
+    }
+    var session = await window.lume.getSession();
+    if (!session) {
+      // HARD GATE: save the pending cart intent, then account, then back here.
+      window.lume.savePending("checkout", "carrinho.html");
+      document.getElementById("checkout-status").textContent = "Cria a tua conta primeiro. O carrinho fica guardado.";
+      setTimeout(function(){ location.href = "conta.html"; }, 1200);
+      return;
+    }
+    var priced = cart.filter(function(i){ var p = productById(i.id); return p && p.price; });
+    if (!priced.length) {
+      document.getElementById("checkout-status").textContent = "Só tens produtos sem preço. Fala connosco no chat para confirmar o preço.";
+      return;
+    }
+    document.getElementById("checkout-status").textContent = "Conta confirmada.";
+    document.getElementById("pay-form").style.display = "block";
+    document.getElementById("pay").onclick = async function(){
+      var phone = document.getElementById("mpesa-phone").value.trim().replace(/\s+/g, "");
+      var err = document.getElementById("pay-error");
+      if (!/^8[45]\d{7}$/.test(phone)) { err.style.display = "block"; err.textContent = "Introduza um número M-Pesa válido, com 9 dígitos, a começar por 84 ou 85."; return; }
+      err.style.display = "none";
+      try {
+        // Create the order first (status: pending_payment — never paid yet).
+        var orderRes = await window.lume.supabase.from("orders").insert({
+          user_id: session.user.id, status: "pending_payment", payment_method: "mpesa", phone: phone
+        }).select().single();
+        if (orderRes.error) throw new Error(orderRes.error.message);
+        var order = orderRes.data;
+        var items = priced.map(function(i){
+          var p = productById(i.id);
+          return {order_id: order.id, product_id: p.id, name: p.name, qty: i.qty, unit_price_mt: p.price};
+        });
+        var itemsRes = await window.lume.supabase.from("order_items").insert(items);
+        if (itemsRes.error) throw new Error(itemsRes.error.message);
+        // Server recalculates the total from trusted prices; the browser
+        // total is never trusted. 503 = payment not configured yet.
+        var fn = await window.lume.supabase.functions.invoke("create-payment", {
+          body: {order_id: order.id, phone: phone, items: priced}
+        });
+        if (fn.error) throw new Error(fn.error.message || "Pagamento indisponível de momento.");
+        var data = fn.data || {};
+        if (data.error) throw new Error(data.error);
+        document.getElementById("pay-done").style.display = "block";
+        document.getElementById("pay-chat-link").style.display = "block";
+        document.getElementById("pay-done").textContent =
+          "Pedido criado. Confirma o PIN no teu telemóvel. " +
+          "Assim que o pagamento for confirmado, vais para o chat, onde cai o recibo.";
+        window.lume.saveCart([]);
+        render();
+        // As soon as the payment is confirmed (webhook marks the order
+        // paid), show success and go to the chat, where the receipt is.
+        var tries = 0;
+        var poll = setInterval(async function(){
+          tries++;
+          if (tries > 60) { clearInterval(poll); return; }
+          var st = await window.lume.supabase.from("orders").select("status").eq("id", order.id).maybeSingle();
+          if (st.data && st.data.status === "paid") {
+            clearInterval(poll);
+            document.getElementById("pay-done").textContent = "Pagamento confirmado! A abrir o chat com o teu recibo…";
+            setTimeout(function(){ location.href = "chat.html"; }, 1500);
+          }
+        }, 5000);
+      } catch (e) {
+        // Fallback error only: never marks the order as paid, never fakes it.
+        err.style.display = "block";
+        err.textContent = "O pagamento não pôde ser criado. O pedido fica pendente e não foi cobrado.";
+      }
+    };
+  };
+});
+</script>
+<a class="chat-fab" href="chat.html" data-chat-fab style="display:none" aria-label="Abrir chat">💬</a>
+</body>
+</html>

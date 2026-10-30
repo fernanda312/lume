@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUME — Eletrodomésticos</title>
+<meta name="description" content="LUME — Eletrodomésticos em Maputo. Máquinas de café, máquinas de soda, acessórios e xaropes.">
+<link rel="icon" href="images/lume-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/app.js"></script>
+</head>
+<body>
+<header>
+  <div class="head">
+    <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
+    <a class="brand" href="index.html"><img class="logo site-logo" src="images/lume-logo.png" alt="Logótipo LUME"><span class="wordmark">LUME</span></a>
+    <a class="cta" href="colecao.html">Ver coleção</a>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <p class="eyebrow">Eletrodomésticos · Maputo</p>
+    <figure><img data-hero-img src="images/lume-hero.jpg" alt="Máquina de café preta — imagem principal da LUME"></figure>
+    <h1 data-hero-title>LUME</h1>
+    <p class="cats">Máquinas de café · Máquinas de soda · Acessórios · Xaropes</p>
+    <p data-hero-text>Eletrodomésticos para a tua casa, com desenho limpo e cores que acendem a cozinha.</p>
+    <a class="btn" href="colecao.html">Ver a coleção</a>
+  </section>
+  <section class="intro">
+    <h2>Para a casa, todos os dias.</h2>
+    <p>Máquinas de café e de soda, acessórios e xaropes — para beberes bem em casa, em Maputo.</p>
+  </section>
+  <section class="section" id="destaques">
+    <div class="rule" style="margin-bottom:28px"></div>
+    <h2>Em destaque</h2>
+    <p class="sub">As máquinas em grande, sem cortes e sem zoom.</p>
+    <div class="editorial">
+      <figure><img src="images/lume-hero.jpg" alt="Máquina de café preta"><figcaption><span>Máquina de café preta</span><span>Máquinas de café</span></figcaption></figure>
+      <figure><img src="images/lume-soda-preta.png" alt="Máquina de soda preta"><figcaption><span>Máquina de soda preta</span><span>Máquinas de soda</span></figcaption></figure>
+      <figure><img src="images/lume-soda-dourada.webp" alt="Máquina de soda dourada"><figcaption><span>Máquina de soda dourada</span><span>Máquinas de soda</span></figcaption></figure>
+    </div>
+    <figure class="wide"><img src="images/lume-destaque-1.jpg" alt="Máquinas de soda em destaque"><figcaption><span>Máquinas de soda</span><span>Em destaque</span></figcaption></figure>
+  </section>
+  <section class="collection" id="colecao">
+    <div class="section">
+      <h2>A coleção</h2>
+      <p class="sub">Passa para o lado — a fila anda sozinha, e para quando tocas ou passas o rato por cima.</p>
+      <div class="hscroll" id="home-scroll"></div>
+      <div class="hscroll-nav">
+        <button class="btn-outline" id="scroll-prev" type="button">‹ Anterior</button>
+        <button class="btn-outline" id="scroll-next" type="button">Seguinte ›</button>
+      </div>
+      <div class="hscroll-nav" id="scroll-dots"></div>
+    </div>
+  </section>
+  <section class="section" id="loja">
+    <div class="rule" style="margin-bottom:28px"></div>
+    <h2>Loja física e online</h2>
+    <p class="sub" data-store-text>A LUME está em Maputo, na loja física e online, em alguns pontos da cidade.</p>
+  </section>
+  <div class="overlay group-overlay" id="group-banner">
+    <div class="overlay-panel">
+      <button class="overlay-close" data-close-group type="button" aria-label="Fechar">×</button>
+      <h2 style="font-weight:400;margin-top:0">O grupo da LUME</h2>
+      <p>Entra no grupo para ver as coleções novas.</p>
+      <table class="mini-table">
+        <tr><td>Coleções novas</td><td>Vês os produtos novos primeiro, no grupo.</td></tr>
+        <tr><td>Novidades</td><td>Recebes as novidades em primeira mão.</td></tr>
+        <tr><td>Cupons</td><td>Descontos só para quem está no grupo.</td></tr>
+      </table>
+      <p><a class="btn" data-group-link href="https://chat.whatsapp.com/LUMEGrupo">Entrar no grupo</a></p>
+    </div>
+  </div>
+  <section class="order" style="padding:56px 24px">
+    <h2>Como comprar</h2>
+    <p data-how-text>1. Escolhe o produto. 2. Cria a conta com email e senha. 3. Paga por M-Pesa e confirma o PIN no telemóvel. 4. Recebes o recibo no chat e a encomenda na tua conta.</p>
+    <p data-delivery-text>Entrega em Maputo em 1 a 3 dias úteis, sem custo de entrega. Levantamento na loja em Maputo. Fora de Maputo, fala connosco no chat antes de pagar, para confirmar o prazo.</p>
+    <p data-trust-text>Loja real em Maputo. Pagamento só por M-Pesa. Cada encomenda paga fica registada na tua conta, com recibo no chat.</p>
+    <a class="btn" href="colecao.html">Ver a coleção</a>
+  </section>
+</main>
+<footer>
+  <img class="footlogo site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+  <div class="wm">LUME</div>
+  <p>Eletrodomésticos · Maputo</p>
+  <p>© 2026 LUME</p>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  // Horizontal scroll row: all products, auto-advance, pausing on
+  // touch and on hover. Arrows and dots move it by hand too.
+  var row = document.getElementById("home-scroll");
+  row.innerHTML = PRODUCTS.map(function(p){
+    return '<figure class="card"><div class="frame"><img src="' + p.img + '" alt="' + p.name + '"></div><figcaption><h3>' + p.name + '</h3><p>' + p.cat + '</p><p class="price">' + (p.price ? fmtMT(p.price) : "Preço a confirmar") + '</p><div class="card-actions"><a class="btn-small" href="produto.html?id=' + p.id + '">Ver produto</a><button class="btn-outline" data-add="' + p.id + '">Adicionar ao carrinho</button></div></figcaption></figure>';
+  }).join("");
+  var dotsBox = document.getElementById("scroll-dots");
+  dotsBox.innerHTML = PRODUCTS.map(function(p, i){
+    return '<button class="hscroll-dot' + (i === 0 ? ' on' : '') + '" data-dot="' + i + '" type="button" aria-label="Ir para o produto ' + (i + 1) + '"></button>';
+  }).join("");
+  function cardWidth(){ var c = row.querySelector(".card"); return c ? c.offsetWidth + 28 : 328; }
+  function goTo(i){
+    row.scrollTo({left: i * cardWidth(), behavior: "smooth"});
+    dotsBox.querySelectorAll("[data-dot]").forEach(function(d){ d.classList.toggle("on", parseInt(d.getAttribute("data-dot"), 10) === i); });
+  }
+  var index = 0, paused = false, timer = null;
+  function advance(){
+    index = (index + 1) % PRODUCTS.length;
+    if (index === 0) row.scrollTo({left: 0, behavior: "smooth"});
+    goTo(index);
+  }
+  function start(){ if (timer) return; timer = setInterval(function(){ if (!paused) advance(); }, 3500); }
+  row.addEventListener("mouseenter", function(){ paused = true; });
+  row.addEventListener("mouseleave", function(){ paused = false; });
+  row.addEventListener("touchstart", function(){ paused = true; }, {passive: true});
+  row.addEventListener("touchend", function(){ paused = false; });
+  document.getElementById("scroll-prev").onclick = function(){ index = (index - 1 + PRODUCTS.length) % PRODUCTS.length; goTo(index); };
+  document.getElementById("scroll-next").onclick = function(){ index = (index + 1) % PRODUCTS.length; goTo(index); };
+  dotsBox.querySelectorAll("[data-dot]").forEach(function(d){
+    d.onclick = function(){ index = parseInt(d.getAttribute("data-dot"), 10); goTo(index); };
+  });
+  start();
+  row.querySelectorAll("[data-add]").forEach(function(btn){
+    btn.addEventListener("click", async function(){
+      var ok = await window.lume.requireAccountForCart(btn.getAttribute("data-add"), 1);
+      if (!ok) return;
+      var old = btn.textContent; btn.textContent = "Adicionado ao carrinho ✓";
+      setTimeout(function(){ btn.textContent = old; }, 1800);
+    });
+  });
+});
+</script>
+<a class="chat-fab" href="chat.html" data-chat-fab style="display:none" aria-label="Abrir chat">💬</a>
+</body>
+</html>

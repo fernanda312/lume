@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUME — A coleção</title>
+<meta name="description" content="LUME — A coleção completa de eletrodomésticos, com preços em MT.">
+<link rel="icon" href="images/lume-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/app.js"></script>
+</head>
+<body>
+<header>
+  <div class="head">
+    <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
+    <a class="brand" href="index.html"><img class="logo site-logo" src="images/lume-logo.png" alt="Logótipo LUME"><span class="wordmark">LUME</span></a>
+    <a class="cta" href="index.html">Voltar ao início</a>
+  </div>
+</header>
+<main>
+  <section class="section" style="padding-top:64px">
+    <div class="rule" style="margin-bottom:28px"></div>
+    <h2>A coleção</h2>
+    <p class="sub">Todos os produtos, com preço em MT em cada cartão.</p>
+    <div class="grid" style="margin-top:64px" id="nova-grid"></div>
+  </section>
+  <div class="group-banner" id="group-banner">
+    <h2 style="font-weight:400">O grupo da LUME</h2>
+    <p>Entre no grupo para receber as novidades em primeira mão e cupons de desconto.</p>
+    <p><a class="btn" data-group-link href="https://chat.whatsapp.com/LUMEGrupo">Entrar no grupo</a></p>
+  </div>
+</main>
+<footer>
+  <img class="footlogo site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+  <div class="wm">LUME</div>
+  <p>Eletrodomésticos · Maputo</p>
+  <p>© 2026 LUME</p>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  function card(p){
+    var price = p.price ? '<p class="price">' + fmtMT(p.price) + '</p>' : '<p class="price">Preço a confirmar</p>';
+    return '<figure class="card"><div class="frame"><img src="' + p.img + '" alt="' + p.name + '"></div><figcaption><h3>' + p.name + '</h3><p>' + p.cat + '</p>' + price
+      + '<div class="card-actions"><a class="btn-small" href="produto.html?id=' + p.id + '">Ver produto</a><button class="btn-outline" data-add="' + p.id + '">Adicionar ao carrinho</button></div></figcaption></figure>';
+  }
+  function bind(root){
+    root.querySelectorAll("[data-add]").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        var ok = await window.lume.requireAccountForCart(btn.getAttribute("data-add"), 1);
+        if (!ok) return;
+        var old = btn.textContent; btn.textContent = "Adicionado ao carrinho ✓";
+        setTimeout(function(){ btn.textContent = old; }, 1800);
+      });
+    });
+  }
+  var nova = document.getElementById("nova-grid");
+  nova.innerHTML = PRODUCTS.map(card).join("");
+  bind(nova);
+});
+</script>
+<a class="chat-fab" href="chat.html" data-chat-fab style="display:none" aria-label="Abrir chat">💬</a>
+</body>
+</html>
