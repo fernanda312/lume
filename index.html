@@ -16,52 +16,94 @@
 <header>
   <div class="head">
     <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
-    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
-    <a class="brand" href="index.html"><img class="logo site-logo" src="images/lume-logo.png" alt="Logótipo LUME"><span class="wordmark">LUME</span></a>
+    <a class="brand" href="index.html"><span class="wordmark">LUME</span></a>
     <a class="cta" href="colecao.html">Ver coleção</a>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
   </div>
 </header>
 <main>
   <section class="hero">
-    <p class="eyebrow">Eletrodomésticos · Maputo</p>
-    <figure><img data-hero-img src="images/lume-hero.jpg" alt="Máquina de café preta — imagem principal da LUME"></figure>
-    <h1 data-hero-title>LUME</h1>
-    <p class="cats">Máquinas de café · Máquinas de soda · Acessórios · Xaropes</p>
-    <p data-hero-text>Eletrodomésticos para a tua casa, com desenho limpo e cores que acendem a cozinha.</p>
+    <figure>
+      <img data-hero-img src="images/lume-hero.jpg" alt="Máquina de café preta — imagem principal da LUME">
+      <div class="hero-overlay">
+        <h1 data-hero-title>LUME</h1>
+        <p class="hero-sub">Eletrodomésticos · Maputo</p>
+        <a class="btn" href="colecao.html">Ver coleção</a>
+      </div>
+    </figure>
+  </section>
+
+  <section class="section" id="mais-vendidos">
+    <h2>Mais vendidos</h2>
+    <p class="sub">Passa para o lado — a fila anda sozinha, e para quando tocas ou passas o rato por cima.</p>
+    <div class="hscroll" id="home-scroll"></div>
+    <div class="hscroll-nav">
+      <button class="btn-outline" id="scroll-prev" type="button">‹ Anterior</button>
+      <button class="btn-outline" id="scroll-next" type="button">Seguinte ›</button>
+    </div>
+    <div class="hscroll-nav" id="scroll-dots"></div>
+  </section>
+
+  <section class="section" id="categorias">
+    <h2>Comprar por categoria</h2>
+    <p class="sub">Escolhe uma categoria para ver os produtos.</p>
+    <div class="cats-grid">
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-soda-preta.png" alt="Máquinas de soda"></figure><span>Máquinas de soda</span></a>
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-hero.jpg" alt="Máquinas de café"></figure><span>Máquinas de café</span></a>
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-cilindro.webp" alt="Cilindros de gás"></figure><span>Cilindros de gás</span></a>
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-garrafas.jpg" alt="Garrafas"></figure><span>Garrafas</span></a>
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-xarope-pessego.jpg" alt="Xaropes"></figure><span>Xaropes</span></a>
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-destaque-1.jpg" alt="Conjuntos"></figure><span>Conjuntos</span></a>
+    </div>
+  </section>
+
+  <section class="feature">
+    <figure><img src="images/lume-soda-dourada.webp" alt="Máquina de soda dourada"></figure>
+    <div>
+      <h2>Qarbo</h2>
+      <p>A máquina de soda de desenho elegante, para água com gás em casa, todos os dias.</p>
+      <a class="btn" href="produto.html?id=a06">Ver a Qarbo dourada</a>
+    </div>
+  </section>
+
+  <section class="section" id="xaropes">
+    <h2>Xaropes artesanais</h2>
+    <p class="sub">Para dar sabor à tua água com gás.</p>
+    <div class="hscroll" id="syrup-scroll"></div>
+  </section>
+
+  <section class="feature">
+    <figure><img src="images/lume-soda-preta.png" alt="Máquina de soda preta"></figure>
+    <div>
+      <h2>Lumi</h2>
+      <p>A máquina de soda simples e compacta, de desenho limpo para a cozinha.</p>
+      <a class="btn" href="produto.html?id=a03">Ver a Lumi preta</a>
+    </div>
+  </section>
+
+  <section class="feature">
+    <figure><img src="images/lume-destaque-1.jpg" alt="Máquinas de soda em casa"></figure>
+    <div>
+      <h2>Um estilo de vida, em casa</h2>
+      <p>Menos plástico de uso único, mais água fresca em casa. Uma máquina, todos os dias.</p>
+      <a class="btn" href="colecao.html">Ver a coleção</a>
+    </div>
+  </section>
+
+  <section class="section" id="como-comprar">
+    <h2>Como comprar</h2>
+    <p data-how-text>1. Escolhe o produto. 2. Cria a conta com email e senha. 3. Paga por M-Pesa e confirma o PIN no telemóvel. 4. Recebes o recibo no chat e a encomenda na tua conta.</p>
+    <p data-delivery-text>Entrega em Maputo em 1 a 3 dias úteis, sem custo de entrega. Levantamento na loja em Maputo. Fora de Maputo, fala connosco no chat antes de pagar, para confirmar o prazo.</p>
+    <p data-trust-text>Loja real em Maputo. Pagamento só por M-Pesa. Cada encomenda paga fica registada na tua conta, com recibo no chat.</p>
     <a class="btn" href="colecao.html">Ver a coleção</a>
   </section>
-  <section class="intro">
-    <h2>Para a casa, todos os dias.</h2>
-    <p>Máquinas de café e de soda, acessórios e xaropes — para beberes bem em casa, em Maputo.</p>
+
+  <section class="section" id="fica-na-bolha">
+    <h2>Fica na bolha</h2>
+    <p class="sub">Entra no grupo para ver as coleções novas primeiro.</p>
+    <p style="text-align:center"><a class="btn" data-group-link href="https://chat.whatsapp.com/LUMEGrupo">Entrar no grupo</a></p>
   </section>
-  <section class="section" id="destaques">
-    <div class="rule" style="margin-bottom:28px"></div>
-    <h2>Em destaque</h2>
-    <p class="sub">As máquinas em grande, sem cortes e sem zoom.</p>
-    <div class="editorial">
-      <figure><img src="images/lume-hero.jpg" alt="Máquina de café preta"><figcaption><span>Máquina de café preta</span><span>Máquinas de café</span></figcaption></figure>
-      <figure><img src="images/lume-soda-preta.png" alt="Máquina de soda preta"><figcaption><span>Máquina de soda preta</span><span>Máquinas de soda</span></figcaption></figure>
-      <figure><img src="images/lume-soda-dourada.webp" alt="Máquina de soda dourada"><figcaption><span>Máquina de soda dourada</span><span>Máquinas de soda</span></figcaption></figure>
-    </div>
-    <figure class="wide"><img src="images/lume-destaque-1.jpg" alt="Máquinas de soda em destaque"><figcaption><span>Máquinas de soda</span><span>Em destaque</span></figcaption></figure>
-  </section>
-  <section class="collection" id="colecao">
-    <div class="section">
-      <h2>A coleção</h2>
-      <p class="sub">Passa para o lado — a fila anda sozinha, e para quando tocas ou passas o rato por cima.</p>
-      <div class="hscroll" id="home-scroll"></div>
-      <div class="hscroll-nav">
-        <button class="btn-outline" id="scroll-prev" type="button">‹ Anterior</button>
-        <button class="btn-outline" id="scroll-next" type="button">Seguinte ›</button>
-      </div>
-      <div class="hscroll-nav" id="scroll-dots"></div>
-    </div>
-  </section>
-  <section class="section" id="loja">
-    <div class="rule" style="margin-bottom:28px"></div>
-    <h2>Loja física e online</h2>
-    <p class="sub" data-store-text>A LUME está em Maputo, na loja física e online, em alguns pontos da cidade.</p>
-  </section>
+
   <div class="overlay group-overlay" id="group-banner">
     <div class="overlay-panel">
       <button class="overlay-close" data-close-group type="button" aria-label="Fechar">×</button>
@@ -75,28 +117,26 @@
       <p><a class="btn" data-group-link href="https://chat.whatsapp.com/LUMEGrupo">Entrar no grupo</a></p>
     </div>
   </div>
-  <section class="order" style="padding:56px 24px">
-    <h2>Como comprar</h2>
-    <p data-how-text>1. Escolhe o produto. 2. Cria a conta com email e senha. 3. Paga por M-Pesa e confirma o PIN no telemóvel. 4. Recebes o recibo no chat e a encomenda na tua conta.</p>
-    <p data-delivery-text>Entrega em Maputo em 1 a 3 dias úteis, sem custo de entrega. Levantamento na loja em Maputo. Fora de Maputo, fala connosco no chat antes de pagar, para confirmar o prazo.</p>
-    <p data-trust-text>Loja real em Maputo. Pagamento só por M-Pesa. Cada encomenda paga fica registada na tua conta, com recibo no chat.</p>
-    <a class="btn" href="colecao.html">Ver a coleção</a>
-  </section>
 </main>
 <footer>
-  <img class="footlogo site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
   <div class="wm">LUME</div>
   <p>Eletrodomésticos · Maputo</p>
+  <div class="footgrid">
+    <div><h3>Loja</h3><p><a href="colecao.html">Coleção</a></p><p><a href="carrinho.html">Carrinho</a></p><p><a href="conta.html">Conta</a></p></div>
+    <div><h3>Empresa</h3><p>Loja em Maputo, física e online.</p><p><a href="chat.html">Chat</a></p></div>
+    <div><h3>Apoio</h3><p><a href="index.html#como-comprar">Como comprar</a></p><p><a href="index.html#fica-na-bolha">Fica na bolha</a></p></div>
+  </div>
   <p>© 2026 LUME</p>
 </footer>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-  // Horizontal scroll row: all products, auto-advance, pausing on
-  // touch and on hover. Arrows and dots move it by hand too.
-  var row = document.getElementById("home-scroll");
-  row.innerHTML = PRODUCTS.map(function(p){
+  function cardHTML(p){
     return '<figure class="card"><div class="frame"><img src="' + p.img + '" alt="' + p.name + '"></div><figcaption><h3>' + p.name + '</h3><p>' + p.cat + '</p><p class="price">' + (p.price ? fmtMT(p.price) : "Preço a confirmar") + '</p><div class="card-actions"><a class="btn-small" href="produto.html?id=' + p.id + '">Ver produto</a><button class="btn-outline" data-add="' + p.id + '">Adicionar ao carrinho</button></div></figcaption></figure>';
-  }).join("");
+  }
+  var row = document.getElementById("home-scroll");
+  row.innerHTML = PRODUCTS.map(cardHTML).join("");
+  var syrup = document.getElementById("syrup-scroll");
+  syrup.innerHTML = PRODUCTS.filter(function(p){ return p.cat === "Xaropes"; }).map(cardHTML).join("");
   var dotsBox = document.getElementById("scroll-dots");
   dotsBox.innerHTML = PRODUCTS.map(function(p, i){
     return '<button class="hscroll-dot' + (i === 0 ? ' on' : '') + '" data-dot="' + i + '" type="button" aria-label="Ir para o produto ' + (i + 1) + '"></button>';
@@ -123,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function(){
     d.onclick = function(){ index = parseInt(d.getAttribute("data-dot"), 10); goTo(index); };
   });
   start();
-  row.querySelectorAll("[data-add]").forEach(function(btn){
+  document.querySelectorAll("[data-add]").forEach(function(btn){
     btn.addEventListener("click", async function(){
       var ok = await window.lume.requireAccountForCart(btn.getAttribute("data-add"), 1);
       if (!ok) return;
