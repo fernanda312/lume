@@ -178,15 +178,9 @@
     window.lume.updateCartCount();
     window.lume.applySettings();
     window.lume.initGroupBanner();
-    document.querySelectorAll("[data-add]").forEach(function(btn){
-      btn.addEventListener("click", async function(){
-        var ok = await window.lume.requireAccountForCart(btn.getAttribute("data-add"), 1);
-        if (!ok) return;
-        var old = btn.textContent;
-        btn.textContent = "Adicionado ao carrinho ✓";
-        setTimeout(function(){ btn.textContent = old; }, 1800);
-      });
-    });
+    // Note: "Adicionar ao carrinho" buttons are bound only where the
+    // cards are rendered (index, colecao), never here as well — binding
+    // them twice would add 2 units per click.
     // Header: the same labels everywhere. "Conta" never changes name,
     // and "Admin" only appears for the admin account, never for customers.
     window.lume.getSession().then(async function(session){

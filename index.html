@@ -17,8 +17,8 @@
   <div class="head">
     <button class="menu-btn" type="button" aria-label="Abrir menu">⋮</button>
     <a class="brand" href="index.html"><span class="wordmark">LUME</span></a>
-    <a class="cta" href="colecao.html">Ver coleção</a>
-    <nav><a href="index.html">Início</a><a href="colecao.html">Coleção</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
+    <a class="head-cart" href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a>
+    <nav><a href="index.html">Início</a><a href="colecao.html">Produtos</a><a href="carrinho.html">Carrinho (<span class="cart-count">0</span>)</a><a href="conta.html" data-account-link>Conta</a><a href="chat.html" data-chat-link>Chat</a><a href="admin.html" data-admin-link style="display:none">Admin</a></nav>
   </div>
 </header>
 <main>
@@ -28,7 +28,7 @@
       <div class="hero-overlay">
         <h1 data-hero-title>LUME</h1>
         <p class="hero-sub">Eletrodomésticos · Maputo</p>
-        <a class="btn" href="colecao.html">Ver coleção</a>
+        <a class="btn" href="produto.html?id=a01">Ver a máquina de café</a>
       </div>
     </figure>
   </section>
@@ -49,7 +49,7 @@
     <p class="sub">Escolhe uma categoria para ver os produtos.</p>
     <div class="cats-grid">
       <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-soda-preta.png" alt="Máquinas de soda"></figure><span>Máquinas de soda</span></a>
-      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-hero.jpg" alt="Máquinas de café"></figure><span>Máquinas de café</span></a>
+      <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-cafe-produto.jpg" alt="Máquinas de café"></figure><span>Máquinas de café</span></a>
       <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-cilindro.webp" alt="Cilindros de gás"></figure><span>Cilindros de gás</span></a>
       <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-garrafas.jpg" alt="Garrafas"></figure><span>Garrafas</span></a>
       <a class="cat-tile" href="colecao.html"><figure><img src="images/lume-xarope-pessego.jpg" alt="Xaropes"></figure><span>Xaropes</span></a>
@@ -81,12 +81,23 @@
     </div>
   </section>
 
+  <section class="section" id="cozinha">
+    <h2>Para a cozinha</h2>
+    <p class="sub">Liquidificadora, fritadeira de ar, micro-ondas e batedeira.</p>
+    <div class="grid" id="kitchen-grid"></div>
+  </section>
+
+  <section class="section" id="casa">
+    <h2>Para a casa</h2>
+    <p class="sub">Chaleira, torradeira, ferro de engomar e aspirador.</p>
+    <div class="grid" id="home-grid"></div>
+  </section>
+
   <section class="feature">
     <figure><img src="images/lume-destaque-1.jpg" alt="Máquinas de soda em casa"></figure>
     <div>
       <h2>Um estilo de vida, em casa</h2>
       <p>Menos plástico de uso único, mais água fresca em casa. Uma máquina, todos os dias.</p>
-      <a class="btn" href="colecao.html">Ver a coleção</a>
     </div>
   </section>
 
@@ -95,7 +106,6 @@
     <p data-how-text>1. Escolhe o produto. 2. Cria a conta com email e senha. 3. Paga por M-Pesa e confirma o PIN no telemóvel. 4. Recebes o recibo no chat e a encomenda na tua conta.</p>
     <p data-delivery-text>Entrega em Maputo em 1 a 3 dias úteis, sem custo de entrega. Levantamento na loja em Maputo. Fora de Maputo, fala connosco no chat antes de pagar, para confirmar o prazo.</p>
     <p data-trust-text>Loja real em Maputo. Pagamento só por M-Pesa. Cada encomenda paga fica registada na tua conta, com recibo no chat.</p>
-    <a class="btn" href="colecao.html">Ver a coleção</a>
   </section>
 
   <section class="section" id="fica-na-bolha">
@@ -122,7 +132,7 @@
   <div class="wm">LUME</div>
   <p>Eletrodomésticos · Maputo</p>
   <div class="footgrid">
-    <div><h3>Loja</h3><p><a href="colecao.html">Coleção</a></p><p><a href="carrinho.html">Carrinho</a></p><p><a href="conta.html">Conta</a></p></div>
+    <div><h3>Loja</h3><p><a href="colecao.html">Produtos</a></p><p><a href="carrinho.html">Carrinho</a></p><p><a href="conta.html">Conta</a></p></div>
     <div><h3>Empresa</h3><p>Loja em Maputo, física e online.</p><p><a href="chat.html">Chat</a></p></div>
     <div><h3>Apoio</h3><p><a href="index.html#como-comprar">Como comprar</a></p><p><a href="index.html#fica-na-bolha">Fica na bolha</a></p></div>
   </div>
@@ -135,6 +145,8 @@ document.addEventListener("DOMContentLoaded", function(){
   }
   var row = document.getElementById("home-scroll");
   row.innerHTML = PRODUCTS.map(cardHTML).join("");
+  document.getElementById("kitchen-grid").innerHTML = PRODUCTS.filter(function(p){ return p.cat === "Cozinha"; }).map(cardHTML).join("");
+  document.getElementById("home-grid").innerHTML = PRODUCTS.filter(function(p){ return p.cat === "Casa"; }).map(cardHTML).join("");
   var syrup = document.getElementById("syrup-scroll");
   syrup.innerHTML = PRODUCTS.filter(function(p){ return p.cat === "Xaropes"; }).map(cardHTML).join("");
   var dotsBox = document.getElementById("scroll-dots");
@@ -146,17 +158,14 @@ document.addEventListener("DOMContentLoaded", function(){
     row.scrollTo({left: i * cardWidth(), behavior: "smooth"});
     dotsBox.querySelectorAll("[data-dot]").forEach(function(d){ d.classList.toggle("on", parseInt(d.getAttribute("data-dot"), 10) === i); });
   }
-  var index = 0, paused = false, timer = null;
+  var index = 0, timer = null;
   function advance(){
     index = (index + 1) % PRODUCTS.length;
     if (index === 0) row.scrollTo({left: 0, behavior: "smooth"});
     goTo(index);
   }
-  function start(){ if (timer) return; timer = setInterval(function(){ if (!paused) advance(); }, 3500); }
-  row.addEventListener("mouseenter", function(){ paused = true; });
-  row.addEventListener("mouseleave", function(){ paused = false; });
-  row.addEventListener("touchstart", function(){ paused = true; }, {passive: true});
-  row.addEventListener("touchend", function(){ paused = false; });
+  // Auto-scroll never stops: not on touch, not on click, not on hover.
+  function start(){ if (timer) return; timer = setInterval(advance, 3500); }
   document.getElementById("scroll-prev").onclick = function(){ index = (index - 1 + PRODUCTS.length) % PRODUCTS.length; goTo(index); };
   document.getElementById("scroll-next").onclick = function(){ index = (index + 1) % PRODUCTS.length; goTo(index); };
   dotsBox.querySelectorAll("[data-dot]").forEach(function(d){

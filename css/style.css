@@ -19,6 +19,7 @@ header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid 
 .footlogo{display:none}
 .head .cta{font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(135deg,#ff7a1a 0%,#e0311a 48%,#141a2e 100%);color:#fff;padding:11px 18px;border-radius:999px;white-space:nowrap}
 .head .cta:hover{opacity:.92}
+.head-cart{font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:#fff;color:#e0311a;border:1px solid #e0311a;padding:10px 16px;border-radius:999px;white-space:nowrap}
 .menu-btn{display:block;background:none;border:0;padding:8px;font-size:28px;line-height:1;color:#1c1a18;cursor:pointer}
 .hero{background:#fff;color:#fff;text-align:center;padding:0}
 .hero figure{margin:0 auto;max-width:720px;position:relative}
