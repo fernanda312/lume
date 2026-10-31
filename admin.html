@@ -25,9 +25,20 @@
     <h1>Painel admin</h1>
     <p style="color:#666;line-height:1.7">A verificar o acesso…</p>
   </div>
-  <div class="form" style="max-width:1080px;display:none" id="admin-box">
-    <h1>Painel admin</h1>
-    <p style="color:#666;line-height:1.7">Mude logo, hero, textos, preços e produtos, apague e mova — sem depender de quem vendeu o site. As fotos são sempre por ficheiro, nunca por link.</p>
+  <div class="form admin-shell" style="max-width:1080px;display:none" id="admin-box">
+    <div class="admin-hero">
+      <img class="site-logo" src="images/lume-logo.png" alt="Logótipo LUME">
+      <div><h1>Painel admin</h1>
+      <p>Mude logo, hero, textos, preços e produtos, apague e mova — sem depender de quem vendeu o site. As fotos são sempre por ficheiro, nunca por link.</p>
+      <p class="admin-who">Conta admin: <strong id="admin-email"></strong> · Loja: <strong>lume.abrdns.com</strong></p></div>
+    </div>
+    <div class="admin-stats">
+      <div class="stat"><span class="stat-num" id="stat-products">—</span><span class="stat-label">Produtos</span></div>
+      <div class="stat"><span class="stat-num" id="stat-orders">—</span><span class="stat-label">Encomendas</span></div>
+      <div class="stat"><span class="stat-num" id="stat-paid">—</span><span class="stat-label">Total pago</span></div>
+      <div class="stat"><span class="stat-num" id="stat-customers">—</span><span class="stat-label">Clientes</span></div>
+      <div class="stat"><span class="stat-num" id="stat-chats">—</span><span class="stat-label">Conversas</span></div>
+    </div>
     <div class="tabs">
       <button type="button" data-tab="products" class="on">Produtos</button>
       <button type="button" data-tab="texts">Textos · Logo · Hero</button>
@@ -36,8 +47,9 @@
       <button type="button" data-tab="chats">Chats</button>
       <button type="button" data-tab="settings">Definições da loja</button>
     </div>
-    <div id="tab-products">
-      <h2 style="font-weight:400">Produtos</h2>
+    <div id="tab-products" class="admin-card">
+      <h2 class="admin-section-title">🛍️ Produtos</h2>
+      <input id="p-search" placeholder="Pesquisar produto por nome ou categoria…">
       <div id="product-list"></div>
       <h3 style="font-weight:400;margin-top:32px">Novo produto / editar</h3>
       <form id="product-form">
@@ -53,8 +65,8 @@
       </form>
       <div class="msg" id="p-msg" style="display:none"></div>
     </div>
-    <div id="tab-texts" style="display:none">
-      <h2 style="font-weight:400">Textos · Logo · Hero</h2>
+    <div id="tab-texts" class="admin-card" style="display:none">
+      <h2 class="admin-section-title">✏️ Textos · Logo · Hero</h2>
       <form id="texts-form">
         <label for="s-hero-title">Título do hero</label><input id="s-hero-title">
         <label for="s-hero-text">Texto do hero</label><textarea id="s-hero-text" rows="3"></textarea>
@@ -68,17 +80,18 @@
       </form>
       <div class="msg" id="s-msg" style="display:none"></div>
     </div>
-    <div id="tab-orders" style="display:none">
-      <h2 style="font-weight:400">Encomendas</h2>
+    <div id="tab-orders" class="admin-card" style="display:none">
+      <h2 class="admin-section-title">📦 Encomendas</h2>
+      <label for="o-filter">Filtrar por estado</label><select id="o-filter"><option value="">Todas</option><option value="pending_payment">A aguardar pagamento</option><option value="paid">Pagas</option><option value="preparing">A preparar</option><option value="delivered">Entregues</option><option value="cancelled">Canceladas</option></select>
       <div id="order-list"></div>
     </div>
-    <div id="tab-customers" style="display:none">
-      <h2 style="font-weight:400">Clientes</h2>
+    <div id="tab-customers" class="admin-card" style="display:none">
+      <h2 class="admin-section-title">👥 Clientes</h2>
       <p style="color:#666;line-height:1.6">Todos os clientes com conta, com email, WhatsApp/telefone e o que cada um comprou. Se a lista está vazia, a conta admin precisa do acesso is_admin no Supabase.</p>
       <div id="customer-list"></div>
     </div>
-    <div id="tab-chats" style="display:none">
-      <h2 style="font-weight:400">Chats</h2>
+    <div id="tab-chats" class="admin-card" style="display:none">
+      <h2 class="admin-section-title">💬 Chats</h2>
       <div id="chat-list"></div>
       <form id="admin-reply-form" style="display:none;margin-top:20px">
         <label for="admin-reply">Responder na conversa selecionada</label>
@@ -87,8 +100,9 @@
         <div style="margin-top:12px"><button class="btn" type="submit">Enviar resposta</button></div>
       </form>
     </div>
-    <div id="tab-settings" style="display:none">
-      <h2 style="font-weight:400">Definições da loja</h2>
+    <div id="tab-settings" class="admin-card" style="display:none">
+      <h2 class="admin-section-title">⚙️ Definições da loja</h2>
+      <div class="admin-note"><strong>💳 Pagamentos M-Pesa</strong><br>As credenciais de pagamento NÃO ficam aqui nem no código. Ficam só nos segredos das Edge Functions no Supabase, com estes 3 nomes: ZUMBO_API_KEY, ZUMBO_MERCHANT_ID e ZUMBO_WEBHOOK_SECRET. Sem elas, o pagamento mostra aviso e não finge pagar.</div>
       <form id="settings-form">
         <label for="st-whatsapp">Link do WhatsApp (botão no chat; troque pelo link real — o comprador muda isto aqui)</label><input id="st-whatsapp" placeholder="https://wa.me/25884xxxxxxx">
         <label for="st-group">Link do grupo (formato de grupo; troque pelo link real)</label><input id="st-group">
@@ -153,13 +167,18 @@ document.addEventListener("DOMContentLoaded", async function(){
     var box = document.getElementById("product-list");
     if (r.error) { box.innerHTML = "<p>Não foi possível carregar os produtos.</p>"; return; }
     if (!r.data.length) { box.innerHTML = "<p>Ainda não há produtos na base de dados — os produtos da migração inicial aparecem aqui depois de correr a migração.</p>"; return; }
-    box.innerHTML = "<table><tr><th>Produto</th><th>Preço</th><th>Stock</th><th>Ordem</th><th>Ações</th></tr>" + r.data.map(function(p){
-      return "<tr><td>" + p.name + " (" + p.slug + ")</td><td>" + (p.price_mt ? fmtMT(p.price_mt) : "Preço a confirmar") + "</td><td>" + (p.stock_qty === null || p.stock_qty === undefined ? "—" : (p.stock_qty === 0 ? "Esgotado" : p.stock_qty)) + "</td><td>" + p.sort_order + "</td><td>" +
+    var q = (document.getElementById("p-search") ? document.getElementById("p-search").value.trim().toLowerCase() : "");
+    var list = q ? r.data.filter(function(p){ return (p.name + " " + (p.category || "") + " " + p.slug).toLowerCase().indexOf(q) !== -1; }) : r.data;
+    if (!list.length) { box.innerHTML = "<p>Nenhum produto com essa pesquisa.</p>"; return; }
+    box.innerHTML = list.map(function(p){
+      var stock = (p.stock_qty === null || p.stock_qty === undefined) ? "<span class='badge badge-none'>Sem controlo</span>" : (p.stock_qty === 0 ? "<span class='badge badge-out'>Esgotado</span>" : "<span class='badge badge-ok'>Stock: " + p.stock_qty + "</span>");
+      var img = p.image_url ? "<img src='" + p.image_url + "' alt='' class='p-thumb'>" : "";
+      return "<div class='p-card'>" + img + "<div class='p-info'><strong>" + p.name + "</strong><span class='p-meta'>" + (p.category || "") + " · " + p.slug + " · Ordem " + p.sort_order + "</span><span class='p-price'>" + (p.price_mt ? fmtMT(p.price_mt) : "Preço a confirmar") + "</span> " + stock + "</div><div class='p-actions'>" +
         "<button class='btn-outline' data-edit='" + p.id + "' type='button'>Editar</button> " +
         "<button class='btn-outline' data-up='" + p.id + "' type='button'>Subir</button> " +
         "<button class='btn-outline' data-down='" + p.id + "' type='button'>Descer</button> " +
-        "<button class='btn-outline' data-del='" + p.id + "' type='button'>Apagar</button></td></tr>";
-    }).join("") + "</table>";
+        "<button class='btn-outline' data-del='" + p.id + "' type='button'>Apagar</button></div></div>";
+    }).join("");
     box.querySelectorAll("[data-edit]").forEach(function(b){
       b.onclick = function(){
         var p = r.data.find(function(x){ return String(x.id) === b.getAttribute("data-edit"); });
@@ -284,7 +303,7 @@ document.addEventListener("DOMContentLoaded", async function(){
       var wa = phone ? "<a class='btn-outline' href='https://wa.me/258" + phone.replace(/\D/g, "").replace(/^258/, "") + "' target='_blank' rel='noopener'>WhatsApp</a>" : "";
       var bought = [];
       mine.forEach(function(o){ (itemsByOrder[o.id] || []).forEach(function(i){ bought.push(i.name + " × " + i.qty + (o.status === "paid" || o.status === "preparing" || o.status === "delivered" ? "" : " (" + o.status + ")")); }); });
-      return "<div style='border-bottom:1px solid #eee;padding:16px 0'><strong>" + (p.email || "—") + "</strong><br>WhatsApp/telefone: " + (phone || "—") + " " + wa + "<br>Encomendas: " + mine.length + " · Pagas: " + paid.length + " · Total pago: " + (totalPaid ? fmtMT(totalPaid) : "—") + "<br>Comprou: " + (bought.length ? bought.join(", ") : "Ainda não comprou.") + "</div>";
+      return "<div class='p-card'><div class='p-info'><strong>" + (p.email || "—") + "</strong><span class='p-meta'>WhatsApp/telefone: " + (phone || "—") + "</span><span class='p-meta'>Encomendas: " + mine.length + " · Pagas: " + paid.length + " · Total pago: " + (totalPaid ? fmtMT(totalPaid) : "—") + "</span><span class='p-meta'>Comprou: " + (bought.length ? bought.join(", ") : "Ainda não comprou.") + "</span></div><div class='p-actions'>" + wa + "</div></div>";
     }).join("");
   }
   async function loadOrders(){
@@ -296,10 +315,14 @@ document.addEventListener("DOMContentLoaded", async function(){
     var emailById = {}; (profs.data || []).forEach(function(p){ emailById[p.id] = p.email; });
     var items = await sb.from("order_items").select("order_id, name, qty, unit_price_mt").in("order_id", r.data.map(function(o){ return o.id; }));
     var itemsByOrder = {}; (items.data || []).forEach(function(i){ (itemsByOrder[i.order_id] = itemsByOrder[i.order_id] || []).push(i); });
-    box.innerHTML = "<table><tr><th>Encomenda</th><th>Cliente</th><th>O que comprou</th><th>Total</th><th>Estado</th><th>Ação</th></tr>" + r.data.map(function(o){
+    var f = document.getElementById("o-filter") ? document.getElementById("o-filter").value : "";
+    var ords = f ? r.data.filter(function(o){ return o.status === f; }) : r.data;
+    if (!ords.length) { box.innerHTML = "<p>Nenhuma encomenda com esse estado.</p>"; return; }
+    var statusPt = {"pending_payment": "A aguardar pagamento", "paid": "Paga", "preparing": "A preparar", "delivered": "Entregue", "cancelled": "Cancelada"};
+    box.innerHTML = ords.map(function(o){
       var bought = (itemsByOrder[o.id] || []).map(function(i){ return i.name + " × " + i.qty; }).join(", ") || "—";
-      return "<tr><td>" + o.id.slice(0, 8) + "</td><td>" + (emailById[o.user_id] || o.user_id.slice(0, 8)) + "<br>" + (o.phone || "") + "</td><td>" + bought + "</td><td>" + (o.total_mt ? fmtMT(o.total_mt) : "—") + "</td><td>" + o.status + "</td><td><select data-status='" + o.id + "'><option value='pending_payment'>pending_payment</option><option value='paid'>paid</option><option value='preparing'>preparing</option><option value='delivered'>delivered</option><option value='cancelled'>cancelled</option></select></td></tr>";
-    }).join("") + "</table>";
+      return "<div class='p-card'><div class='p-info'><strong>Encomenda " + o.id.slice(0, 8) + "</strong><span class='p-meta'>" + (emailById[o.user_id] || o.user_id.slice(0, 8)) + " · " + (o.phone || "") + "</span><span class='p-meta'>Comprou: " + bought + "</span><span class='p-price'>" + (o.total_mt ? fmtMT(o.total_mt) : "—") + "</span> <span class='badge st-" + o.status + "'>" + (statusPt[o.status] || o.status) + "</span><span class='p-meta'>Ref: " + (o.provider_reference || "—") + "</span></div><div class='p-actions'><select data-status='" + o.id + "'><option value='pending_payment'>A aguardar pagamento</option><option value='paid'>Paga</option><option value='preparing'>A preparar</option><option value='delivered'>Entregue</option><option value='cancelled'>Cancelada</option></select></div></div>";
+    }).join("");
     box.querySelectorAll("[data-status]").forEach(function(sel){
       var id = sel.getAttribute("data-status");
       var cur = r.data.find(function(o){ return o.id === id; });
@@ -314,7 +337,7 @@ document.addEventListener("DOMContentLoaded", async function(){
     if (r.error) { box.innerHTML = "<p>Não foi possível carregar os chats.</p>"; return; }
     if (!r.data.length) { box.innerHTML = "<p>Ainda não há conversas.</p>"; return; }
     box.innerHTML = r.data.map(function(c){
-      return "<p><button class='btn-outline' data-conv='" + c.id + "' type='button'>Abrir conversa " + c.id.slice(0, 8) + "</button> — cliente " + String(c.user_id).slice(0, 8) + "</p>";
+      return "<div class='p-card'><div class='p-info'><strong>Conversa " + c.id.slice(0, 8) + "</strong><span class='p-meta'>Cliente " + String(c.user_id).slice(0, 8) + "</span></div><div class='p-actions'><button class='btn-outline' data-conv='" + c.id + "' type='button'>Abrir conversa</button></div></div>";
     }).join("");
     box.querySelectorAll("[data-conv]").forEach(function(b){
       b.onclick = async function(){
@@ -355,6 +378,26 @@ document.addEventListener("DOMContentLoaded", async function(){
     document.getElementById("admin-reply-file").value = "";
     loadChats();
   });
+  document.getElementById("admin-email").textContent = session.user.email;
+  var ps = document.getElementById("p-search");
+  if (ps) ps.addEventListener("input", loadProducts);
+  var of = document.getElementById("o-filter");
+  if (of) of.addEventListener("change", loadOrders);
+  async function loadStats(){
+    try {
+      var pc = await sb.from("products").select("id", {count: "exact", head: true});
+      var oc = await sb.from("orders").select("id, status, total_mt");
+      var cc = await sb.from("profiles").select("id", {count: "exact", head: true});
+      var vc = await sb.from("conversations").select("id", {count: "exact", head: true});
+      document.getElementById("stat-products").textContent = (pc.count === null || pc.count === undefined) ? "—" : pc.count;
+      document.getElementById("stat-orders").textContent = (oc.data || []).length;
+      var paid = (oc.data || []).filter(function(o){ return o.status === "paid" || o.status === "preparing" || o.status === "delivered"; }).reduce(function(s, o){ return s + (o.total_mt || 0); }, 0);
+      document.getElementById("stat-paid").textContent = paid ? fmtMT(paid) : "0 MT";
+      document.getElementById("stat-customers").textContent = (cc.count === null || cc.count === undefined) ? "—" : cc.count;
+      document.getElementById("stat-chats").textContent = (vc.count === null || vc.count === undefined) ? "—" : vc.count;
+    } catch (e) {}
+  }
+  loadStats();
   loadProducts();
   loadSettingsForm();
 });
