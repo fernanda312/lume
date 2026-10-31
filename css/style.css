@@ -21,13 +21,13 @@ header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid 
 .head .cta:hover{opacity:.92}
 .head-cart{font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:#fff;color:#e0311a;border:1px solid #e0311a;padding:10px 16px;border-radius:999px;white-space:nowrap}
 .menu-btn{display:block;background:none;border:0;padding:8px;font-size:28px;line-height:1;color:#1c1a18;cursor:pointer}
-.hero{background:#fff;color:#fff;text-align:center;padding:0}
-.hero figure{margin:0 auto;max-width:720px;position:relative}
+.hero{background:#fff;text-align:center;padding:0}
+.hero figure{margin:0;max-width:none;position:relative}
 .hero img{width:100%;height:auto;border:0;display:block}
-.hero-overlay{position:absolute;top:0;left:0;right:0;padding:28px 16px 0;text-align:center}
-.hero h1{font-size:clamp(44px,13vw,84px);letter-spacing:.28em;text-indent:.28em;font-weight:400;margin:0;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.35)}
-.hero-sub{font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:#fff;margin:10px 0 18px;text-shadow:0 2px 12px rgba(0,0,0,.35)}
-.hero .btn{margin-top:0}
+.brands{background:#fff;border-bottom:1px solid #eee;overflow:hidden;padding:18px 0}
+.brands-track{display:flex;gap:48px;width:max-content;animation:brands-scroll 30s linear infinite;white-space:nowrap}
+.brands-track span{font-family:Arial,Helvetica,sans-serif;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#333;font-weight:700}
+@keyframes brands-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .cats-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 20px;max-width:900px;margin:0 auto}
 @media(min-width:768px){.cats-grid{grid-template-columns:repeat(3,1fr)}}
 .cat-tile{text-align:center}
